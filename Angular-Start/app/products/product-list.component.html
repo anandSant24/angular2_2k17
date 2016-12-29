@@ -1,0 +1,87 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}
+    </div>
+
+    <!-- Filter the Products   -->
+    <div class='panel-body'>
+        <div class='row'>
+            <div class='col-md-2'>Filter by:</div>
+            <div class='col-md-4'>
+                <!-- SPACING is important for Two way binding -->
+                <input type='text' [(ngModel)]='listFilter'/>
+            </div>
+        </div>
+        <div class='row' *ngIf='listFilter'>
+            <div class='col-md-6'>
+                <h3>Filtered by: {{ listFilter | lowercase}} </h3>
+            </div>
+        </div>
+
+        <div class='has-error'></div>
+
+        <div class='table-responsive'>
+            <table class='table' *ngIf='products && products.length'>
+                <thead>
+                    <tr>
+                        <th>
+                            <button class='btn btn-primary' (click)='toggleImage()'> 
+                                {{showImage ? 'Hide' : 'Show' }} Image
+                            </button>
+                            <!-- Todo observe that ngOnInit is getting called onload FIX this 
+                            check for the ngOnInit() method inside product-list.component
+                            -->
+                            <button class='btn btn-primary' (click)=ngOnInit()> 
+                                deals
+                            </button>                            
+                        </th>
+                        <th>Product</th>
+                        <th>Code</th>
+                        <th>Available</th>
+                        <th>Price</th>
+                        <th>5 Star Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let product of products | productFilter: listFilter'>
+                        <td>
+                            <!-- property binding using [ ] --> 
+                            <img *ngIf='showImage'
+                            [src]='product.imageUrl' 
+                            [title]='product.productName | uppercase'
+                            [style.width] = 'product.imageWidth'
+                            [style.margin]='product.imageMargin'>
+                        </td>
+                        <td>{{product.productName}}</td>
+                        <td>{{product.productCode | lowercase}}</td>
+                        <td>{{product.releaseDate}}</td>
+                        <!-- 1.2-2 atleat 1 decimal and followed by two placed -->
+                        <td>{{product.price | currency: 'USD':true:'1.2-2'}}</td>
+                        <td><ai-star [rating]='product.starRating' (ratingClicked)='onRatingClicked($event)'></ai-star></td>
+                    </tr>
+                    <!--<tr *ngFor='let product of products | productFilter:listFilter'>
+                        <td>
+                            <img *ngIf='showImage'
+                                 [src]='product.imageUrl'
+                                 [title]='product.productName | uppercase'
+                                 [style.width.px]='imageWidth' 
+                                 [style.margin.px]='imageMargin'>
+                        </td>
+                        <td><a [routerLink]="['/product', product.productId]">
+                            {{product.productName}}
+                            </a>
+                        </td>
+                        <td>{{ product.productCode | lowercase }}</td>
+                        <td>{{ product.releaseDate }}</td>
+                        <td>{{ product.price | currency:'USD':true:'1.2-2' }}</td>
+                        <td>
+                            <ai-star [rating]='product.starRating'
+                                    (ratingClicked)='onRatingClicked($event)'>
+                            </ai-star>
+                       </td>
+                    </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
